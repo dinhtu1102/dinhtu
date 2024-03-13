@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>N-Quân Hậu</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+
+    td {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #000;
+      text-align: center;
+    }
+
+    .queen {
+      font-size: 18px;
+      line-height: 30px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>N-Quân Hậu</h1>
+
+  <table id="chessboard"></table>
+
+  <script>
+    const boardSize = 10;
+    let solutionFound = false;
+
+    function solveQueensProblem() {
+      const board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
+      placeQueens(board, 0);
+      displaySolution(board);
+    }
+
+    function placeQueens(board, row) {
+      if (row === boardSize) {
+        solutionFound = true;
+        return;
+      }
+
+      for (let col = 0; col < boardSize; col++) {
+        if (isSafe(board, row, col)) {
+          board[row][col] = 1;
+
+          placeQueens(board, row + 1);
+
+          if (solutionFound) {
+            return;
+          }
+
+          board[row][col] = 0;
+        }
+      }
+    }
+
+    function isSafe(board, row, col) {
+      for (let i = 0; i < row; i++) {
+        if (board[i][col] === 1) {
+          return false;
+        }
+
+        const leftDiagonal = col - (row - i);
+        const rightDiagonal = col + (row - i);
+
+        if (leftDiagonal >= 0 && board[i][leftDiagonal] === 1) {
+          return false;
+        }
+
+        if (rightDiagonal < boardSize && board[i][rightDiagonal] === 1) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function displaySolution(board) {
+      const chessboard = document.getElementById('chessboard');
+
+      for (let i = 0; i < boardSize; i++) {
+        const row = document.createElement('tr');
+
+        for (let j = 0; j < boardSize; j++) {
+          const cell = document.createElement('td');
+
+          if (board[i][j] === 1) {
+            const queen = document.createElement('div');
+            queen.className = 'queen';
+            queen.textContent = '♛';
+            cell.appendChild(queen);
+          }
+
+          row.appendChild(cell);
+        }
+
+        chessboard.appendChild(row);
+      }
+    }
+
+    solveQueensProblem();
+  </script>
+</body>
+</html>

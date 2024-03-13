@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài toán Đóng Thùng</title>
+  <style>
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bài toán Đóng Thùng</h1>
+
+  <ul id="results"></ul>
+
+  <script>
+    function packingProblem(weights, binCapacity) {
+      const resultsElement = document.getElementById('results');
+      resultsElement.innerHTML = '';
+
+      weights.sort((a, b) => b - a); // Sắp xếp giảm dần theo trọng lượng
+
+      let bins = [[]];
+
+      for (const weight of weights) {
+        let binFound = false;
+
+        for (const bin of bins) {
+          const currentBinWeight = bin.reduce((sum, w) => sum + w, 0);
+
+          if (currentBinWeight + weight <= binCapacity) {
+            bin.push(weight);
+            binFound = true;
+            break;
+          }
+        }
+
+        if (!binFound) {
+          bins.push([weight]);
+        }
+      }
+
+      bins.forEach((bin, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = Thùng ${index + 1}: ${bin.join(', ')} | Tổng trọng lượng: ${bin.reduce((sum, w) => sum + w, 0)};
+        resultsElement.appendChild(listItem);
+      });
+    }
+
+    const weights = [4, 5, 6, 3, 2, 7];
+    const binCapacity = 10;
+
+    packingProblem(weights, binCapacity);
+  </script>
+</body>
+</html>
